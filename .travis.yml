@@ -14,7 +14,7 @@ after_success:
   - docker build -t ajayvedwa/multi-worker ./worker
   - docker build -t ajayvedwa/multi-nginx ./nginx
   # Login in to the docker CLI
-  - echo "$DOCKER_PASSWORD" | docker login - u "$DOCKER_ID" -- password-stdin
+  - echo "$DOCKER_PASSWORD" | docker login - u "$DOCKER_ID" --password-stdin
   # Push images to dockerhub
   - docker push ajayvedwa/multi-client
   - docker push ajayvedwa/multi-server
