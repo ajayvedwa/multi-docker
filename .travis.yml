@@ -1,0 +1,22 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t ajayvedwa/multi-docker -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true ajayvedwa/multi-docker npm run test -- --coverage
+
+after_success:
+  - docker build -t ajayvedwa/multi-client ./client
+  - docker build -t ajayvedwa/multi-server ./server
+  - docker build -t ajayvedwa/multi-worker ./worker
+  - docker build -t ajayvedwa/multi-nginx ./nginx
+  # Login in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login - u "$DOCKER_ID" -- password-stdin
+  # Push images to dockerhub
+  - docker push ajayvedwa/multi-client
+  - docker push ajayvedwa/multi-server
+  - docker push ajayvedwa/multi-worker
+  - docker push ajayvedwa/multi-nginx
